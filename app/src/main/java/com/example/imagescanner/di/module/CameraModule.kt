@@ -1,8 +1,9 @@
 package com.example.imagescanner.di.module
 
 import android.content.Context
-import com.example.imagescanner.data.camera.CameraManagerImpl
-import com.example.imagescanner.domain.camera.CameraManager
+import com.example.imagescanner.data.camera.CameraResourceManager
+import com.example.imagescanner.data.camera.CameraUseCaseImpl
+import com.example.imagescanner.domain.camera.CameraUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -17,15 +18,18 @@ abstract class CameraModule {
 
     @Binds
     @Singleton
-    abstract fun bindCameraModule(mg: CameraManagerImpl): CameraManager
+    abstract fun bindCameraModule(mg: CameraUseCaseImpl): CameraUseCase
 
     companion object {
         @Provides
         @Singleton
-        fun provideCameraManagerImpl(
-            @ApplicationContext context: Context
-        ): CameraManagerImpl {
-            return CameraManagerImpl(context)
-        }
+        fun provideCameraUseCaseImpl(
+            @ApplicationContext context: Context,
+            cameraResourceManager: CameraResourceManager
+        ): CameraUseCaseImpl = CameraUseCaseImpl(context, cameraResourceManager)
+
+        @Provides
+        @Singleton
+        fun provideCameraResourceManager(): CameraResourceManager = CameraResourceManager()
     }
 }

@@ -17,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ImageScanner"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr" >
+        </meta-data>
         <activity
             android:name=".MainActivity"
             android:exported="true"
