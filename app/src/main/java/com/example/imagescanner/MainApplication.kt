@@ -12,15 +12,7 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class MainApplication: Application() {
-
-    @Inject
-    lateinit var translateManager: TranslateManager
     override fun onCreate() {
         super.onCreate()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            //_ 다운로드 욀 때까지 로딩 필요?
-            translateManager.downloadModule()
-        }
     }
 }

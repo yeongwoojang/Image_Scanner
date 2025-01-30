@@ -21,30 +21,23 @@ class TranslateManager @Inject constructor() {
             .build()
     )
 
-    suspend fun downloadModule() {
-        if (!isDownloaded) {
+    suspend fun downloadModule(): Result<Boolean> =
+        suspendCancellableCoroutine<Result<Boolean>> { continuation ->
             val conditions = DownloadConditions.Builder()
                 .requireWifi()
                 .build()
 
-            try {
-                suspendCancellableCoroutine<Unit> { continuation ->
-                    translator.downloadModelIfNeeded(conditions)
-                        .addOnSuccessListener {
-                            isDownloaded = true
-                            Log.d(TAG, "downloadModelIfNeeded() | SUCCESS")
-                            continuation.resume(Unit)
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.e(TAG, "downloadModelIfNeeded() | ERROR $exception")
-                        }
+            translator.downloadModelIfNeeded(conditions)
+                .addOnSuccessListener {
+                    isDownloaded = true
+                    Log.d(TAG, "downloadModelIfNeeded() | SUCCESS")
+                    continuation.resume(Result.success(true))
                 }
-            } catch (e: Exception) {
-                throw e
-            }
-
+                .addOnFailureListener { exception ->
+                    Log.e(TAG, "downloadModelIfNeeded() | ERROR $exception")
+                    continuation.resume(Result.failure(exception))
+                }
         }
-    }
 
     suspend fun translateText(text: String): String {
         return suspendCancellableCoroutine<String> { continuation ->
