@@ -5,11 +5,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraDevice
-import android.util.Log
 import android.view.Surface
 import android.view.TextureView
-import com.example.imagescanner.data.exception.CameraException
 import com.example.imagescanner.domain.camera.CameraUseCase
+import com.example.imagescanner.domain.exception.CameraError
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -35,15 +34,12 @@ class CameraUseCaseImpl @Inject constructor(
                 }
 
                 override fun onDisconnected(device: CameraDevice) {
-                    continuation.resumeWithException(
-                        CameraException("Camera disconnected")
-                    )
                     device.close()
                 }
 
                 override fun onError(device: CameraDevice, error: Int) {
                     continuation.resumeWithException(
-                        CameraException("Camera error: $error")
+                        CameraError.InitializationError("Camera error: $error")
                     )
                     device.close()
                 }

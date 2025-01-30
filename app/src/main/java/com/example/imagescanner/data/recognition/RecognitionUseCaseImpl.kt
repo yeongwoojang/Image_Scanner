@@ -4,16 +4,13 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
-import android.graphics.Matrix
 import android.graphics.Paint
-import android.util.Log
-import com.example.imagescanner.data.exception.RecognitionException
+import com.example.imagescanner.domain.exception.CameraError
 import com.example.imagescanner.domain.recognition.RecognitionUseCase
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -41,13 +38,13 @@ class RecognitionUseCaseImpl @Inject constructor() : RecognitionUseCase {
                     }
                     .addOnFailureListener { e ->
                         continuation.resumeWithException(
-                            RecognitionException(e.message.orEmpty())
+                            CameraError.RecognitionError(e.message.orEmpty())
                         )
                         e.printStackTrace()
                     }
             } catch (e: Exception) {
                 continuation.resumeWithException(
-                    RecognitionException(e.message.orEmpty())
+                    CameraError.RecognitionError(e.message.orEmpty())
                 )
             }
         }

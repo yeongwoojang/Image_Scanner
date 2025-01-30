@@ -89,4 +89,5 @@ dependencies {
     implementation(libs.vision.common)
     implementation(libs.play.services.mlkit.text.recognition.common)
     implementation(libs.play.services.mlkit.text.recognition)
+    implementation(libs.play.services.mlkit.translate)
 }
